@@ -5,7 +5,8 @@ import Home from "./pages/home";
 import Profile from "./pages/profile";
 import SignIn from "./pages/signIn";
 import SignOut from "./pages/SignUp";
-import Header from "./components/header";
+import Header from "./components/Header";
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
   return (
@@ -14,9 +15,11 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
-        <Route path="/profile" element={<Profile />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/signup" element={<SignOut />} />
+        <Route element={<PrivateRoute />}>
+          <Route path="/profile" element={<Profile />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
