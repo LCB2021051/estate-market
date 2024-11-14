@@ -17,9 +17,6 @@ import {
   signOutStart,
   signOutFaliure,
   signOutSuccess,
-  getUserListingsStart,
-  getUserListingsFaliure,
-  getUserListingsSuccess,
 } from "../redux/user/userSlice.js";
 import { useDispatch } from "react-redux";
 import { app } from "../firebase.js";
@@ -35,8 +32,7 @@ function Profile() {
   const [userUpdated, setUserUpdated] = useState(false);
   const [listings, setListings] = useState([]);
   const [showListingsError, setShowListingError] = useState(false);
-
-  console.log("Listings : ", listings);
+  const [deleteListingError, setDeleteListingError] = useState(false);
 
   useEffect(() => {
     if (file) {
@@ -133,12 +129,37 @@ function Profile() {
       const res = await fetch(`api/user/listings/${currentUser._id}`);
       const data = await res.json();
       if (data.success === false) {
-        setShowListingError(true);
+        setShowListingError(error.message);
         return;
       }
+      if (data.length === 0) return setShowListingError("Nothing to show");
       setListings(data);
     } catch (error) {
-      setShowListingError(true);
+      setShowListingError(error.message);
+    }
+  };
+
+  const handleDeleteListing = async (id) => {
+    try {
+      setDeleteListingError(false);
+
+      const res = await fetch(`api/listing/delete/${id}`, {
+        method: "DELETE",
+      });
+
+      const data = await res.json();
+
+      if (data.success === false) {
+        setDeleteListingError(data.message);
+        console.log("data.message: ", data.message);
+        return;
+      }
+
+      setListings((prev) => prev.filter((listing) => listing._id !== id));
+      setDeleteListingError(false);
+    } catch (error) {
+      setDeleteListingError(error.message);
+      console.log("error.message: ", error.message);
     }
   };
 
@@ -227,7 +248,9 @@ function Profile() {
       <div className="p-3 flex flex-col gap-4">
         <h1 className="text-center text-2xl font-semibold">Your Listings</h1>
         {showListingsError && (
-          <p className="text-red-700 mt-5">"Error Showing Listings"</p>
+          <p className="text-red-700 mt-5 text-center truncate">
+            {showListingsError}
+          </p>
         )}
         {listings &&
           listings.length > 0 &&
@@ -249,9 +272,17 @@ function Profile() {
               >
                 <p>{listing.name}</p>
               </Link>
+              {deleteListingError && (
+                <p className="text-red-600">Error Deleting</p>
+              )}
               <div className="flex flex-row items-center gap-6">
                 <button className="text-green-600 uppercase">Edit</button>
-                <button className="text-red-600 uppercase">Delete</button>
+                <button
+                  onClick={() => handleDeleteListing(listing._id)}
+                  className="text-red-600 uppercase"
+                >
+                  Delete
+                </button>
               </div>
             </div>
           ))}
