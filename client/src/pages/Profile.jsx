@@ -276,7 +276,9 @@ function Profile() {
                 <p className="text-red-600">Error Deleting</p>
               )}
               <div className="flex flex-row items-center gap-6">
-                <button className="text-green-600 uppercase">Edit</button>
+                <Link to={`/update-listing/${listing._id}`}>
+                  <button className="text-green-600 uppercase">Edit</button>
+                </Link>
                 <button
                   onClick={() => handleDeleteListing(listing._id)}
                   className="text-red-600 uppercase"
