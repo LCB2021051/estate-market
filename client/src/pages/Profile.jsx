@@ -17,6 +17,9 @@ import {
   signOutStart,
   signOutFaliure,
   signOutSuccess,
+  getUserListingsStart,
+  getUserListingsFaliure,
+  getUserListingsSuccess,
 } from "../redux/user/userSlice.js";
 import { useDispatch } from "react-redux";
 import { app } from "../firebase.js";
@@ -30,6 +33,10 @@ function Profile() {
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
   const [userUpdated, setUserUpdated] = useState(false);
+  const [listings, setListings] = useState([]);
+  const [showListingsError, setShowListingError] = useState(false);
+
+  console.log("Listings : ", listings);
 
   useEffect(() => {
     if (file) {
@@ -94,7 +101,7 @@ function Profile() {
       const res = await fetch(`api/user/delete/${currentUser._id}`, {
         method: "DELETE",
       });
-      const data = res.json();
+      const data = await res.json();
       if (data.success === false) {
         dispatch(deleteUserFaliure(data.message));
         return;
@@ -109,7 +116,7 @@ function Profile() {
     try {
       dispatch(signOutStart());
       const res = await fetch("api/auth/signout");
-      const data = res.json();
+      const data = await res.json();
       if (data.success === false) {
         dispatch(signOutFaliure(data.message));
         return;
@@ -117,6 +124,21 @@ function Profile() {
       dispatch(signOutSuccess(data));
     } catch (error) {
       dispatch(signOutFaliure(error.message));
+    }
+  };
+
+  const handleShowListings = async () => {
+    try {
+      setShowListingError(false);
+      const res = await fetch(`api/user/listings/${currentUser._id}`);
+      const data = await res.json();
+      if (data.success === false) {
+        setShowListingError(true);
+        return;
+      }
+      setListings(data);
+    } catch (error) {
+      setShowListingError(true);
     }
   };
 
@@ -199,6 +221,41 @@ function Profile() {
       <p className="text-green-500 mt-5">
         {userUpdated ? "Updated Successfully!" : ""}
       </p>
+      <button onClick={handleShowListings} className="text-green-600 w-full">
+        Show Listings
+      </button>
+      <div className="p-3 flex flex-col gap-4">
+        <h1 className="text-center text-2xl font-semibold">Your Listings</h1>
+        {showListingsError && (
+          <p className="text-red-700 mt-5">"Error Showing Listings"</p>
+        )}
+        {listings &&
+          listings.length > 0 &&
+          listings.map((listing, i) => (
+            <div
+              className="p-3 flex justify-between gap-4 border border-gray-400 rounded-lg items-center"
+              key={listing._id}
+            >
+              <Link to={`/listings/${listing._id}`}>
+                <img
+                  src={listing.imageUrls[0]}
+                  alt="listing_image"
+                  className="h-16 w-16 object-contain"
+                />
+              </Link>
+              <Link
+                to={`/listings/${listing._id}`}
+                className="flex-1 text-slate-500 font-semibold hover:underline truncate"
+              >
+                <p>{listing.name}</p>
+              </Link>
+              <div className="flex flex-row items-center gap-6">
+                <button className="text-green-600 uppercase">Edit</button>
+                <button className="text-red-600 uppercase">Delete</button>
+              </div>
+            </div>
+          ))}
+      </div>
     </div>
   );
 }
