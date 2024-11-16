@@ -51,18 +51,18 @@ function Home() {
     <div>
       {/* Top */}
       <div className="flex flex-col gap-6 p-28 px-8 max-w-6xl mx-auto">
-        <h1 className="text-slate-700 font-bold text-3xl lg:text-6xl">
-          Find your next <span className="text-slate-500">Perfect</span> <br />{" "}
+        <h1 className="text-[#28506F] font-bold text-3xl lg:text-6xl">
+          Find your next <span className="text-[#2b6c9e]">Perfect</span> <br />{" "}
           place with ease{" "}
         </h1>
-        <div className="text-gray-400 text-xs sm:text-sm">
+        <div className="text-gray-600 text-xs sm:text-sm">
           The real estate market is the ultimate destination to find your dream
           home. With endless options, it caters to every lifestyle and
           preference.
         </div>
         <Link
           to={"/search"}
-          className="text-xs sm:text-sm text-blue-600 hover:underline"
+          className="text-xs sm:text-sm text-[#28506F] font-semibold hover:underline"
         >
           Let's get Started...
         </Link>
@@ -79,25 +79,25 @@ function Home() {
                   background: `url(${listing.imageUrls[0]}) center no-repeat`,
                   backgroundSize: "cover",
                 }}
-                className="h-[400px]"
+                className="h-[500px] shadow-md"
               ></div>
             </SwiperSlide>
           ))}
       </Swiper>
 
-      {/* Listing results for offer, sale and rent */}
+      {/* Listing results for offer, sale, and rent */}
       <div className="max-w-6xl mx-auto p-3 flex flex-col gap-8 my-10">
         {offerListings && offerListings.length > 0 && (
           <div>
             <div className="my-3">
-              <h2 className="text-slate-600 font-semibold text-3xl">
+              <h2 className="text-[#28506F] font-semibold text-3xl">
                 Trending Offers
               </h2>
               <Link
                 to={"/search?offer=true"}
-                className="text-blue-700 hover:underline text-sm"
+                className="text-[#28506F] hover:underline text-sm"
               >
-                Show more Offer
+                Show more Offers
               </Link>
             </div>
             <div className="flex flex-row gap-4">
@@ -110,14 +110,14 @@ function Home() {
         {saleListings && saleListings.length > 0 && (
           <div>
             <div className="my-3">
-              <h2 className="text-slate-600 font-semibold text-3xl">
+              <h2 className="text-[#28506F] font-semibold text-3xl">
                 For Sale
               </h2>
               <Link
                 to={"/search?type=sale"}
-                className="text-blue-700 hover:underline text-sm"
+                className="text-[#28506F] hover:underline text-sm"
               >
-                Show more Offer
+                Show more Offers
               </Link>
             </div>
             <div className="flex flex-row gap-4">
@@ -130,14 +130,14 @@ function Home() {
         {rentListings && rentListings.length > 0 && (
           <div>
             <div className="my-3">
-              <h2 className="text-slate-600 font-semibold text-3xl">
+              <h2 className="text-[#28506F] font-semibold text-3xl">
                 For Rent
               </h2>
               <Link
                 to={"/search?type=rent"}
-                className="text-blue-700 hover:underline text-sm"
+                className="text-[#28506F] hover:underline text-sm"
               >
-                Show more Offer
+                Show more Offers
               </Link>
             </div>
             <div className="flex flex-row gap-4">

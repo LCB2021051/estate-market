@@ -122,7 +122,7 @@ function CreateListing() {
     try {
       if (formData.imageUrls.length < 1)
         return setError("You must upload at least one image!");
-      if (formData.regularPrice < formData.discountedPrice)
+      if (Number(formData.regularPrice) < Number(formData.discountedPrice))
         return setError("Discounted price must be lower!");
 
       setLoading(true);
@@ -155,6 +155,8 @@ function CreateListing() {
       setError(error.message);
     }
   };
+
+  console.log(formData);
 
   return (
     <main className="p-3 max-w-4xl mx-auto">
@@ -279,7 +281,7 @@ function CreateListing() {
                 type="number"
                 id="regularPrice"
                 min={50}
-                max={1000000}
+                max={10000000}
                 required
                 className="p-3 border border-gray-300 rounded-lg max-w-40"
                 onChange={handleChange}
@@ -296,7 +298,7 @@ function CreateListing() {
                   type="number"
                   id="discountedPrice"
                   min={0}
-                  max={formData.regularPrice}
+                  max={10000000}
                   required
                   className="p-3 border border-gray-300 rounded-lg max-w-40"
                   onChange={handleChange}

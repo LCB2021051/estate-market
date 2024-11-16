@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import {
   getDownloadURL,
   getStorage,
@@ -18,7 +18,6 @@ import {
   signOutFaliure,
   signOutSuccess,
 } from "../redux/user/userSlice.js";
-import { useDispatch } from "react-redux";
 import { app } from "../firebase.js";
 
 function Profile() {
@@ -91,7 +90,7 @@ function Profile() {
     }
   };
 
-  const handleDelete = async (e) => {
+  const handleDelete = async () => {
     try {
       dispatch(deleteUserStart());
       const res = await fetch(`api/user/delete/${currentUser._id}`, {
@@ -129,7 +128,7 @@ function Profile() {
       const res = await fetch(`api/user/listings/${currentUser._id}`);
       const data = await res.json();
       if (data.success === false) {
-        setShowListingError(error.message);
+        setShowListingError(data.message);
         return;
       }
       if (data.length === 0) return setShowListingError("Nothing to show");
@@ -151,7 +150,6 @@ function Profile() {
 
       if (data.success === false) {
         setDeleteListingError(data.message);
-        console.log("data.message: ", data.message);
         return;
       }
 
@@ -159,13 +157,14 @@ function Profile() {
       setDeleteListingError(false);
     } catch (error) {
       setDeleteListingError(error.message);
-      console.log("error.message: ", error.message);
     }
   };
 
   return (
     <div className="p-3 max-w-lg mx-auto">
-      <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
+      <h1 className="text-3xl font-semibold text-center my-7 text-[#28506F]">
+        Profile
+      </h1>
       <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
         <input
           onChange={(e) => {
@@ -190,9 +189,9 @@ function Profile() {
               Error Image upload (must be less than 2.0 mb)
             </span>
           ) : filePerc > 0 && filePerc < 100 ? (
-            <span className="text-slate-700">Uploading {filePerc}%</span>
-          ) : filePerc == 100 ? (
-            <span className="text-green-500 ">Upload Complete</span>
+            <span className="text-[#28506F]">Uploading {filePerc}%</span>
+          ) : filePerc === 100 ? (
+            <span className="text-green-500">Upload Complete</span>
           ) : (
             ""
           )}
@@ -202,7 +201,7 @@ function Profile() {
           placeholder="username"
           id="username"
           defaultValue={currentUser.username}
-          className="border p-3 rounded-lg"
+          className="border p-3 rounded-lg border-[#28506F] text-[#28506F]"
           onChange={handleChange}
         />
         <input
@@ -210,31 +209,37 @@ function Profile() {
           placeholder="email"
           id="email"
           defaultValue={currentUser.email}
-          className="border p-3 rounded-lg"
+          className="border p-3 rounded-lg border-[#28506F] text-[#28506F]"
           onChange={handleChange}
         />
         <input
           type="password"
           placeholder="password"
           id="password"
-          className="border p-3 rounded-lg"
+          className="border p-3 rounded-lg border-[#28506F] text-[#28506F]"
           onChange={handleChange}
         />
-        <button className="bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80">
-          {loading ? "Loadng..." : "Update"}
+        <button className="bg-[#28506F] text-[#F1F0BA] rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80">
+          {loading ? "Loading..." : "Update"}
         </button>
         <Link
           to={"/create-listing"}
-          className="bg-green-700 text-white p-3 rounded-lg uppercase text-center hover:opacity-95"
+          className="bg-[#28506F] text-[#F1F0BA] p-3 rounded-lg uppercase text-center hover:opacity-95"
         >
           Create Listing
         </Link>
       </form>
       <div className="flex justify-between mt-5">
-        <span onClick={handleDelete} className="text-red-700 cursor-pointer">
+        <span
+          onClick={handleDelete}
+          className="text-red-700 cursor-pointer hover:underline"
+        >
           Delete Account
         </span>
-        <span onClick={handleSignOut} className="text-red-700 cursor-pointer">
+        <span
+          onClick={handleSignOut}
+          className="text-red-700 cursor-pointer hover:underline"
+        >
           Sign Out
         </span>
       </div>
@@ -242,11 +247,16 @@ function Profile() {
       <p className="text-green-500 mt-5">
         {userUpdated ? "Updated Successfully!" : ""}
       </p>
-      <button onClick={handleShowListings} className="text-green-600 w-full">
+      <button
+        onClick={handleShowListings}
+        className="text-[#28506F] w-full hover:underline"
+      >
         Show Listings
       </button>
       <div className="p-3 flex flex-col gap-4">
-        <h1 className="text-center text-2xl font-semibold">Your Listings</h1>
+        <h1 className="text-center text-2xl font-semibold text-[#28506F]">
+          Your Listings
+        </h1>
         {showListingsError && (
           <p className="text-red-700 mt-5 text-center truncate">
             {showListingsError}
@@ -254,9 +264,9 @@ function Profile() {
         )}
         {listings &&
           listings.length > 0 &&
-          listings.map((listing, i) => (
+          listings.map((listing) => (
             <div
-              className="p-3 flex justify-between gap-4 border border-gray-400 rounded-lg items-center"
+              className="p-3 flex justify-between gap-4 border border-[#28506F] rounded-lg items-center"
               key={listing._id}
             >
               <Link to={`/listings/${listing._id}`}>
@@ -268,7 +278,7 @@ function Profile() {
               </Link>
               <Link
                 to={`/listings/${listing._id}`}
-                className="flex-1 text-slate-500 font-semibold hover:underline truncate"
+                className="flex-1 text-[#28506F] font-semibold hover:underline truncate"
               >
                 <p>{listing.name}</p>
               </Link>

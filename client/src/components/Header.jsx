@@ -24,49 +24,49 @@ function Header() {
   }, [location.search]);
 
   return (
-    <header className="bg-slate-200 shadow-md">
+    <header className="bg-[#28506F] shadow-md">
       <div className="flex justify-between items-center max-w-6xl mx-auto p-3">
         <Link to="/">
           <h1 className="font-bold text-sm sm:text-xl flex flex-wrap">
-            <span className="text-slate-500">estate</span>
-            <span className="text-slate-700">Market</span>
+            <span className="text-[#F1F0BA]">estate</span>
+            <span className="text-white">Market</span>
           </h1>
         </Link>
         <form
           onSubmit={handleSubmit}
-          className="bg-slate-100 p-3 rounded-lg flex items-center"
+          className="bg-[#f8f7e9] p-3 rounded-lg flex items-center"
         >
           <input
             type="text"
             placeholder="Search..."
-            className="bg-transparent focus:outline-none w-24 sm:w-64"
+            className="bg-transparent focus:outline-none w-24 sm:w-64 text-[#28506F]"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
           <button>
-            <FaSearch className="text-slate-600" />
+            <FaSearch className="text-[#28506F]" />
           </button>
         </form>
         <ul className="flex gap-4">
           <Link to="/">
-            <li className="hidden sm:inline text-slate-700 hover:underline">
+            <li className="hidden sm:inline text-[#F1F0BA] hover:underline">
               Home
             </li>
           </Link>
           <Link to={"/about"}>
-            <li className="hidden sm:inline text-slate-700 hover:underline">
+            <li className="hidden sm:inline text-[#F1F0BA] hover:underline">
               About
             </li>
           </Link>
           <Link to={"/profile"}>
             {currentUser ? (
               <img
-                className="text-slate-700 h-7 rounded-full w-7 object-cover"
+                className="h-7 rounded-full w-7 object-cover border-2 border-[#F1F0BA]"
                 src={currentUser.avatar}
                 alt="profile"
               />
             ) : (
-              <li className="sm:inline text-slate-700 hover:underline">
+              <li className="sm:inline text-[#F1F0BA] hover:underline">
                 Sign in
               </li>
             )}

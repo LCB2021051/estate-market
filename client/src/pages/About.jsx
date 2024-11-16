@@ -3,9 +3,7 @@ import React from "react";
 function About() {
   return (
     <div className="max-w-4xl mx-auto p-6 text-slate-700">
-      <h1 className="text-4xl font-bold text-center my-4">
-        About Estate Market
-      </h1>
+      <h1 className="text-4xl font-bold my-4">About Estate Market</h1>
       <p className="text-lg my-4">
         Welcome to <span className="font-semibold">Estate Market</span>, your
         trusted online real estate marketplace. Whether you're searching for

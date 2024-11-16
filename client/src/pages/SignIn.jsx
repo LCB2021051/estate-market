@@ -11,8 +11,6 @@ import OAuth from "../components/OAuth.jsx";
 
 function SignIn() {
   const [formData, setFormData] = useState({});
-  // const [error, setError] = useState(null);
-  // const [loading, setLoading] = useState(false);
   const { loading, error } = useSelector((state) => state.user);
 
   const navigate = useNavigate();
@@ -28,7 +26,7 @@ function SignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      dispatch(signInStart()); // setLoading(true);
+      dispatch(signInStart());
       const res = await fetch("/api/auth/sign-in", {
         method: "POST",
         headers: {
@@ -40,56 +38,54 @@ function SignIn() {
       const data = await res.json();
 
       if (data.success === false) {
-        // setError(data.message);
-        // setLoading(false);
         dispatch(signInFailure(data.message));
         return;
       }
 
-      // setLoading(false);
-      // setError(null);
       dispatch(signInSuccess(data));
       navigate("/");
     } catch (error) {
-      // setLoading(false);
-      // setError(error.message);
       dispatch(signInFailure(error.message));
     }
   };
 
   return (
     <div className="p-3 max-w-lg mx-auto">
-      <h1 className="text-3xl text-center font-semibold my-7">Sign In</h1>
+      <h1 className="text-3xl text-center font-semibold my-7 text-[#28506F]">
+        Sign In
+      </h1>
       <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
         <input
           type="email"
-          placeholder="email"
-          className="border p-3 rounded-lg"
+          placeholder="Email"
+          className="border p-3 rounded-lg focus:outline-none text-[#28506F] border-[#28506F]"
           id="email"
           onChange={handleChange}
         />
         <input
           type="password"
-          placeholder="password"
-          className="border p-3 rounded-lg"
+          placeholder="Password"
+          className="border p-3 rounded-lg focus:outline-none text-[#28506F] border-[#28506F]"
           id="password"
           onChange={handleChange}
         />
         <button
           disabled={loading}
-          className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
+          className="bg-[#28506F] text-[#F1F0BA] p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
         >
           {loading ? "Loading..." : "Sign In"}
         </button>
         <OAuth />
       </form>
       <div className="flex gap-2 mt-5">
-        <p>Dont an account?</p>
+        <p>Don’t have an account?</p>
         <Link to={"/signup"}>
-          <span className="text-blue-700">Sign up</span>
+          <span className="text-[#28506F] font-semibold hover:underline">
+            Sign up
+          </span>
         </Link>
       </div>
-      {error && <p className="text-rose-500">{error}</p>}
+      {error && <p className="text-rose-500 mt-3">{error}</p>}
     </div>
   );
 }
