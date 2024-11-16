@@ -16,6 +16,7 @@ function Search() {
   const [loading, setLoading] = useState(false);
   const [listings, setListings] = useState([]);
   const [error, setError] = useState(false);
+  const [showMore, setShowMore] = useState(false);
 
   const handleChange = (e) => {
     if (
@@ -99,12 +100,18 @@ function Search() {
       try {
         setLoading(true);
         setError(false);
+        setShowMore(false);
         const searchQuery = urlParams.toString();
         const res = await fetch(`/api/listing/get?${searchQuery}`);
         const data = await res.json();
         if (data.success === false) {
           setError("Something went wrong!");
           return;
+        }
+        if (data.length > 8) {
+          setShowMore(true);
+        } else {
+          setShowMore(false);
         }
         setListings(data);
         setLoading(false);
@@ -116,7 +123,26 @@ function Search() {
     fetchListings();
   }, [location.search]);
 
-  console.log("Listings:", listings);
+  const onShowMoreClick = async () => {
+    try {
+      const numberOfListings = listings.length;
+      const startIndex = numberOfListings;
+      const urlParams = new URLSearchParams(location.search);
+      urlParams.set("startIndex", startIndex);
+      const searchQuery = urlParams.toString();
+
+      const res = await fetch(`/api/listing/get?${searchQuery}`);
+      const data = await res.json();
+
+      if (data.length < 9) {
+        setShowMore(false);
+      }
+      setListings((prevListings) => [...prevListings, ...data]);
+    } catch (error) {
+      console.error("Error loading more listings:", error);
+      setShowMore(false);
+    }
+  };
 
   return (
     <div className="flex flex-col md:flex-row p-4">
@@ -226,6 +252,7 @@ function Search() {
           Listing Results
         </h1>
         <div className="p-5 flex flex-wrap gap-5">
+          {error && <p className="text-red-600">{error}</p>}
           {!loading && listings.length === 0 && (
             <p className="text-slate-700 text-xl uppercase text-center w-full">
               No Listing found
@@ -241,6 +268,14 @@ function Search() {
             listings.map((listing) => (
               <ListingItem key={listing._id} listing={listing} />
             ))}
+          {showMore && (
+            <button
+              onClick={onShowMoreClick}
+              className="text-green-700 hover:underline p-7 text-center w-full"
+            >
+              Show more
+            </button>
+          )}
         </div>
       </div>
     </div>
